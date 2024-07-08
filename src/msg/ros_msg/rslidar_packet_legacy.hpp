@@ -3,14 +3,14 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <map>
-
-#include <ros/types.h>
-#include <ros/serialization.h>
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
+#include <ros/serialization.h>
+#include <ros/types.h>
+
+#include <map>
+#include <string>
+#include <vector>
 
 namespace rslidar_msgs
 {
@@ -19,11 +19,8 @@ struct rslidarPacket_
 {
   typedef rslidarPacket_<ContainerAllocator> Type;
 
-  rslidarPacket_() : stamp(), data()
-  {
-    data.assign(0);
-  }
-  rslidarPacket_(const ContainerAllocator& _alloc) : stamp(), data()
+  rslidarPacket_() : stamp(), data() { data.assign(0); }
+  rslidarPacket_(const ContainerAllocator & _alloc) : stamp(), data()
   {
     (void)_alloc;
     data.assign(0);
@@ -48,9 +45,11 @@ typedef boost::shared_ptr< ::rslidar_msgs::rslidarPacket const> rslidarPacketCon
 // constants requiring out of line definition
 
 template <typename ContainerAllocator>
-std::ostream& operator<<(std::ostream& s, const ::rslidar_msgs::rslidarPacket_<ContainerAllocator>& v)
+std::ostream & operator<<(
+  std::ostream & s, const ::rslidar_msgs::rslidarPacket_<ContainerAllocator> & v)
 {
-  ros::message_operations::Printer< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >::stream(s, "", v);
+  ros::message_operations::Printer< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >::stream(
+    s, "", v);
   return s;
 }
 
@@ -102,12 +101,9 @@ struct HasHeader< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> const> : Fa
 template <class ContainerAllocator>
 struct MD5Sum< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 {
-  static const char* value()
-  {
-    return "1e4288e00b9222ea477b73350bf24f51";
-  }
+  static const char * value() { return "1e4288e00b9222ea477b73350bf24f51"; }
 
-  static const char* value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator> &)
   {
     return value();
   }
@@ -118,12 +114,9 @@ struct MD5Sum< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 template <class ContainerAllocator>
 struct DataType< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 {
-  static const char* value()
-  {
-    return "rslidar_msgs/rslidarPacket";
-  }
+  static const char * value() { return "rslidar_msgs/rslidarPacket"; }
 
-  static const char* value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator> &)
   {
     return value();
   }
@@ -132,7 +125,7 @@ struct DataType< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 template <class ContainerAllocator>
 struct Definition< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 {
-  static const char* value()
+  static const char * value()
   {
     return "# Raw LIDAR packet.\n\
 \n\
@@ -142,7 +135,7 @@ uint8[1248] data        # packet contents\n\
 ";
   }
 
-  static const char* value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarPacket_<ContainerAllocator> &)
   {
     return value();
   }
@@ -159,7 +152,7 @@ template <class ContainerAllocator>
 struct Serializer< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 {
   template <typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T m)
+  inline static void allInOne(Stream & stream, T m)
   {
     stream.next(m.stamp);
     stream.next(m.data);
@@ -179,13 +172,14 @@ template <class ContainerAllocator>
 struct Printer< ::rslidar_msgs::rslidarPacket_<ContainerAllocator> >
 {
   template <typename Stream>
-  static void stream(Stream& s, const std::string& indent, const ::rslidar_msgs::rslidarPacket_<ContainerAllocator>& v)
+  static void stream(
+    Stream & s, const std::string & indent,
+    const ::rslidar_msgs::rslidarPacket_<ContainerAllocator> & v)
   {
     s << indent << "stamp: ";
     Printer<ros::Time>::stream(s, indent + "  ", v.stamp);
     s << indent << "data[]" << std::endl;
-    for (size_t i = 0; i < v.data.size(); ++i)
-    {
+    for (size_t i = 0; i < v.data.size(); ++i) {
       s << indent << "  data[" << i << "]: ";
       Printer<uint8_t>::stream(s, indent + "  ", v.data[i]);
     }

@@ -32,8 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "utility/yaml_reader.hpp"
 #include "source/source.hpp"
+#include "utility/yaml_reader.hpp"
 
 namespace robosense
 {
@@ -43,8 +43,7 @@ namespace lidar
 class NodeManager
 {
 public:
-
-  void init(const YAML::Node& config);
+  void init(const YAML::Node & config);
   void start();
   void stop();
 
@@ -52,10 +51,8 @@ public:
   NodeManager() = default;
 
 private:
-
   std::vector<Source::Ptr> sources_;
 };
 
 }  // namespace lidar
 }  // namespace robosense
-

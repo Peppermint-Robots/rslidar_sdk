@@ -30,17 +30,18 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************************************************************/
 
-#include "manager/node_manager.hpp"
-
-#include <rs_driver/macro/version.hpp>
 #include <signal.h>
 
+#include <rs_driver/macro/version.hpp>
+
+#include "manager/node_manager.hpp"
+
 #ifdef ROS_FOUND
-#include <ros/ros.h>
 #include <ros/package.h>
+#include <ros/ros.h>
 #elif ROS2_FOUND
-#include <rclcpp/rclcpp.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <rclcpp/rclcpp.hpp>
 #endif
 
 using namespace robosense::lidar;
@@ -61,15 +62,14 @@ static void sigHandler(int sig)
 #endif
 }
 
-int main(int argc, char** argv)
+int main(int argc, char ** argv)
 {
   signal(SIGINT, sigHandler);  ///< bind ctrl+c signal with the sigHandler function
 
   RS_TITLE << "********************************************************" << RS_REND;
   RS_TITLE << "**********                                    **********" << RS_REND;
-  RS_TITLE << "**********    RSLidar_SDK Version: v" << RSLIDAR_VERSION_MAJOR 
-    << "." << RSLIDAR_VERSION_MINOR 
-    << "." << RSLIDAR_VERSION_PATCH << "     **********" << RS_REND;
+  RS_TITLE << "**********    RSLidar_SDK Version: v" << RSLIDAR_VERSION_MAJOR << "."
+           << RSLIDAR_VERSION_MINOR << "." << RSLIDAR_VERSION_PATCH << "     **********" << RS_REND;
   RS_TITLE << "**********                                    **********" << RS_REND;
   RS_TITLE << "********************************************************" << RS_REND;
 
@@ -82,32 +82,28 @@ int main(int argc, char** argv)
   std::string config_path;
 
 #ifdef RUN_IN_ROS_WORKSPACE
-   config_path = ros::package::getPath("rslidar_sdk");
+  config_path = ros::package::getPath("rslidar_sdk");
 #else
-   config_path = ament_index_cpp::get_package_share_directory("ppmt_robot_driver");
+  config_path = ament_index_cpp::get_package_share_directory("ppmt_robot_driver");
 #endif
 
-   config_path += "/config/config.yaml";
+  config_path += "/config/robosense_lidar_config.yaml";
 
 #ifdef ROS_FOUND
   ros::NodeHandle priv_hh("~");
   std::string path;
   priv_hh.param("config_path", path, std::string(""));
-  if (!path.empty())
-  {
+  if (!path.empty()) {
     config_path = path;
   }
 #endif
 
   YAML::Node config;
-  try
-  {
+  try {
     config = YAML::LoadFile(config_path);
-  }
-  catch (...)
-  {
-    RS_ERROR << "The format of config file " << config_path 
-      << " is wrong. Please check (e.g. indentation)." << RS_REND;
+  } catch (...) {
+    RS_ERROR << "The format of config file " << config_path
+             << " is wrong. Please check (e.g. indentation)." << RS_REND;
     return -1;
   }
 

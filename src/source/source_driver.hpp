@@ -32,10 +32,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma once
 
-#include "source/source.hpp"
-
 #include <rs_driver/api/lidar_driver.hpp>
 #include <rs_driver/utility/sync_queue.hpp>
+
+#include "source/source.hpp"
 
 namespace robosense
 {
@@ -45,8 +45,7 @@ namespace lidar
 class SourceDriver : public Source
 {
 public:
-
-  virtual void init(const YAML::Node& config);
+  virtual void init(const YAML::Node & config);
   virtual void start();
   virtual void stop();
   virtual void regPacketCallback(DestinationPacket::Ptr dst);
@@ -55,11 +54,10 @@ public:
   SourceDriver(SourceType src_type);
 
 protected:
-
   std::shared_ptr<LidarPointCloudMsg> getPointCloud(void);
   void putPointCloud(std::shared_ptr<LidarPointCloudMsg> msg);
-  void putPacket(const Packet& msg);
-  void putException(const lidar::Error& msg);
+  void putPacket(const Packet & msg);
+  void putException(const lidar::Error & msg);
   void processPointCloud();
 
   std::shared_ptr<lidar::LidarDriver<LidarPointCloudMsg>> driver_ptr_;
@@ -69,12 +67,9 @@ protected:
   bool to_exit_process_;
 };
 
-SourceDriver::SourceDriver(SourceType src_type)
-  : Source(src_type), to_exit_process_(false)
-{
-}
+SourceDriver::SourceDriver(SourceType src_type) : Source(src_type), to_exit_process_(false) {}
 
-inline void SourceDriver::init(const YAML::Node& config)
+inline void SourceDriver::init(const YAML::Node & config)
 {
   YAML::Node driver_config = yamlSubNodeAbort(config, "driver");
   lidar::RSDriverParam driver_param;
@@ -82,15 +77,20 @@ inline void SourceDriver::init(const YAML::Node& config)
   // input related
   yamlRead<uint16_t>(driver_config, "msop_port", driver_param.input_param.msop_port, 6699);
   yamlRead<uint16_t>(driver_config, "difop_port", driver_param.input_param.difop_port, 7788);
-  yamlRead<std::string>(driver_config, "host_address", driver_param.input_param.host_address, "0.0.0.0");
-  yamlRead<std::string>(driver_config, "group_address", driver_param.input_param.group_address, "0.0.0.0");
+  yamlRead<std::string>(
+    driver_config, "host_address", driver_param.input_param.host_address, "0.0.0.0");
+  yamlRead<std::string>(
+    driver_config, "group_address", driver_param.input_param.group_address, "0.0.0.0");
   yamlRead<bool>(driver_config, "use_vlan", driver_param.input_param.use_vlan, false);
   yamlRead<std::string>(driver_config, "pcap_path", driver_param.input_param.pcap_path, "");
   yamlRead<float>(driver_config, "pcap_rate", driver_param.input_param.pcap_rate, 1);
   yamlRead<bool>(driver_config, "pcap_repeat", driver_param.input_param.pcap_repeat, true);
-  yamlRead<uint16_t>(driver_config, "user_layer_bytes", driver_param.input_param.user_layer_bytes, 0);
-  yamlRead<uint16_t>(driver_config, "tail_layer_bytes", driver_param.input_param.tail_layer_bytes, 0);
-  yamlRead<uint32_t>(driver_config, "socket_recv_buf", driver_param.input_param.socket_recv_buf, 106496);
+  yamlRead<uint16_t>(
+    driver_config, "user_layer_bytes", driver_param.input_param.user_layer_bytes, 0);
+  yamlRead<uint16_t>(
+    driver_config, "tail_layer_bytes", driver_param.input_param.tail_layer_bytes, 0);
+  yamlRead<uint32_t>(
+    driver_config, "socket_recv_buf", driver_param.input_param.socket_recv_buf, 106496);
   // decoder related
   std::string lidar_type;
   yamlReadAbort<std::string>(driver_config, "lidar_type", lidar_type);
@@ -98,7 +98,8 @@ inline void SourceDriver::init(const YAML::Node& config)
 
   // decoder
   yamlRead<bool>(driver_config, "wait_for_difop", driver_param.decoder_param.wait_for_difop, true);
-  yamlRead<bool>(driver_config, "use_lidar_clock", driver_param.decoder_param.use_lidar_clock, false);
+  yamlRead<bool>(
+    driver_config, "use_lidar_clock", driver_param.decoder_param.use_lidar_clock, false);
   yamlRead<float>(driver_config, "min_distance", driver_param.decoder_param.min_distance, 0.2);
   yamlRead<float>(driver_config, "max_distance", driver_param.decoder_param.max_distance, 200);
   yamlRead<float>(driver_config, "start_angle", driver_param.decoder_param.start_angle, 0);
@@ -107,7 +108,8 @@ inline void SourceDriver::init(const YAML::Node& config)
   yamlRead<bool>(driver_config, "ts_first_point", driver_param.decoder_param.ts_first_point, false);
 
   // mechanical decoder
-  yamlRead<bool>(driver_config, "config_from_file", driver_param.decoder_param.config_from_file, false);
+  yamlRead<bool>(
+    driver_config, "config_from_file", driver_param.decoder_param.config_from_file, false);
   yamlRead<std::string>(driver_config, "angle_path", driver_param.decoder_param.angle_path, "");
 
   uint16_t split_frame_mode;
@@ -125,8 +127,7 @@ inline void SourceDriver::init(const YAML::Node& config)
   yamlRead<float>(driver_config, "pitch", driver_param.decoder_param.transform_param.pitch, 0);
   yamlRead<float>(driver_config, "yaw", driver_param.decoder_param.transform_param.yaw, 0);
 
-  switch (src_type_)
-  {
+  switch (src_type_) {
     case SourceType::MSG_FROM_LIDAR:
       driver_param.input_type = InputType::ONLINE_LIDAR;
       break;
@@ -141,28 +142,22 @@ inline void SourceDriver::init(const YAML::Node& config)
   driver_param.print();
 
   driver_ptr_.reset(new lidar::LidarDriver<LidarPointCloudMsg>());
-  driver_ptr_->regPointCloudCallback(std::bind(&SourceDriver::getPointCloud, this), 
-      std::bind(&SourceDriver::putPointCloud, this, std::placeholders::_1));
+  driver_ptr_->regPointCloudCallback(
+    std::bind(&SourceDriver::getPointCloud, this),
+    std::bind(&SourceDriver::putPointCloud, this, std::placeholders::_1));
   driver_ptr_->regExceptionCallback(
-      std::bind(&SourceDriver::putException, this, std::placeholders::_1));
+    std::bind(&SourceDriver::putException, this, std::placeholders::_1));
   point_cloud_process_thread_ = std::thread(std::bind(&SourceDriver::processPointCloud, this));
 
-  if (!driver_ptr_->init(driver_param))
-  {
+  if (!driver_ptr_->init(driver_param)) {
     RS_ERROR << "Driver Initialize Error...." << RS_REND;
     exit(-1);
   }
 }
 
-inline void SourceDriver::start()
-{
-  driver_ptr_->start();
-}
+inline void SourceDriver::start() { driver_ptr_->start(); }
 
-inline SourceDriver::~SourceDriver()
-{
-  stop();
-}
+inline SourceDriver::~SourceDriver() { stop(); }
 
 inline void SourceDriver::stop()
 {
@@ -175,8 +170,7 @@ inline void SourceDriver::stop()
 inline std::shared_ptr<LidarPointCloudMsg> SourceDriver::getPointCloud(void)
 {
   std::shared_ptr<LidarPointCloudMsg> point_cloud = free_point_cloud_queue_.pop();
-  if (point_cloud.get() != NULL)
-  {
+  if (point_cloud.get() != NULL) {
     return point_cloud;
   }
 
@@ -187,17 +181,13 @@ inline void SourceDriver::regPacketCallback(DestinationPacket::Ptr dst)
 {
   Source::regPacketCallback(dst);
 
-  if (pkt_cb_vec_.size() == 1)
-  {
+  if (pkt_cb_vec_.size() == 1) {
     driver_ptr_->regPacketCallback(
-        std::bind(&SourceDriver::putPacket, this, std::placeholders::_1));
+      std::bind(&SourceDriver::putPacket, this, std::placeholders::_1));
   }
 }
 
-inline void SourceDriver::putPacket(const Packet& msg)
-{
-  sendPacket(msg);
-}
+inline void SourceDriver::putPacket(const Packet & msg) { sendPacket(msg); }
 
 void SourceDriver::putPointCloud(std::shared_ptr<LidarPointCloudMsg> msg)
 {
@@ -206,11 +196,9 @@ void SourceDriver::putPointCloud(std::shared_ptr<LidarPointCloudMsg> msg)
 
 void SourceDriver::processPointCloud()
 {
-  while (!to_exit_process_)
-  {
+  while (!to_exit_process_) {
     std::shared_ptr<LidarPointCloudMsg> msg = point_cloud_queue_.popWait(1000);
-    if (msg.get() == NULL)
-    {
+    if (msg.get() == NULL) {
       continue;
     }
     sendPointCloud(msg);
@@ -219,10 +207,9 @@ void SourceDriver::processPointCloud()
   }
 }
 
-inline void SourceDriver::putException(const lidar::Error& msg)
+inline void SourceDriver::putException(const lidar::Error & msg)
 {
-  switch (msg.error_code_type)
-  {
+  switch (msg.error_code_type) {
     case lidar::ErrCodeType::INFO_CODE:
       RS_INFO << msg.toString() << RS_REND;
       break;

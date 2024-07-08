@@ -39,4 +39,3 @@ typedef PointCloudT<PointXYZIRT> LidarPointCloudMsg;
 #else
 typedef PointCloudT<PointXYZI> LidarPointCloudMsg;
 #endif
-

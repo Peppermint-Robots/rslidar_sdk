@@ -3,16 +3,16 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include <map>
-
-#include <ros/types.h>
-#include <ros/serialization.h>
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
-
+#include <ros/serialization.h>
+#include <ros/types.h>
 #include <std_msgs/Header.h>
+
+#include <map>
+#include <string>
+#include <vector>
+
 #include "msg/ros_msg/rslidar_packet_legacy.hpp"
 
 namespace rslidar_msgs
@@ -22,10 +22,8 @@ struct rslidarScan_
 {
   typedef rslidarScan_<ContainerAllocator> Type;
 
-  rslidarScan_() : header(), packets()
-  {
-  }
-  rslidarScan_(const ContainerAllocator& _alloc) : header(_alloc), packets(_alloc)
+  rslidarScan_() : header(), packets() {}
+  rslidarScan_(const ContainerAllocator & _alloc) : header(_alloc), packets(_alloc)
   {
     (void)_alloc;
   }
@@ -34,9 +32,10 @@ struct rslidarScan_
   _header_type header;
 
   typedef std::vector<
-      ::rslidar_msgs::rslidarPacket_<ContainerAllocator>,
-      typename ContainerAllocator::template rebind<::rslidar_msgs::rslidarPacket_<ContainerAllocator>>::other>
-      _packets_type;
+    ::rslidar_msgs::rslidarPacket_<ContainerAllocator>,
+    typename ContainerAllocator::template rebind<
+      ::rslidar_msgs::rslidarPacket_<ContainerAllocator>>::other>
+    _packets_type;
   _packets_type packets;
 
   typedef boost::shared_ptr<::rslidar_msgs::rslidarScan_<ContainerAllocator>> Ptr;
@@ -52,9 +51,11 @@ typedef boost::shared_ptr<::rslidar_msgs::rslidarScan const> rslidarScanConstPtr
 // constants requiring out of line definition
 
 template <typename ContainerAllocator>
-std::ostream& operator<<(std::ostream& s, const ::rslidar_msgs::rslidarScan_<ContainerAllocator>& v)
+std::ostream & operator<<(
+  std::ostream & s, const ::rslidar_msgs::rslidarScan_<ContainerAllocator> & v)
 {
-  ros::message_operations::Printer<::rslidar_msgs::rslidarScan_<ContainerAllocator>>::stream(s, "", v);
+  ros::message_operations::Printer<::rslidar_msgs::rslidarScan_<ContainerAllocator>>::stream(
+    s, "", v);
   return s;
 }
 
@@ -106,12 +107,9 @@ struct HasHeader<::rslidar_msgs::rslidarScan_<ContainerAllocator> const> : TrueT
 template <class ContainerAllocator>
 struct MD5Sum<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 {
-  static const char* value()
-  {
-    return "ff6baa58985b528481871cbaf1bb342f";
-  }
+  static const char * value() { return "ff6baa58985b528481871cbaf1bb342f"; }
 
-  static const char* value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator> &)
   {
     return value();
   }
@@ -122,12 +120,9 @@ struct MD5Sum<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 template <class ContainerAllocator>
 struct DataType<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 {
-  static const char* value()
-  {
-    return "rslidar_msgs/rslidarScan";
-  }
+  static const char * value() { return "rslidar_msgs/rslidarScan"; }
 
-  static const char* value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator> &)
   {
     return value();
   }
@@ -136,7 +131,7 @@ struct DataType<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 template <class ContainerAllocator>
 struct Definition<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 {
-  static const char* value()
+  static const char * value()
   {
     return "# LIDAR scan packets.\n\
 \n\
@@ -171,7 +166,7 @@ uint8[1248] data        # packet contents\n\
 ";
   }
 
-  static const char* value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator>&)
+  static const char * value(const ::rslidar_msgs::rslidarScan_<ContainerAllocator> &)
   {
     return value();
   }
@@ -188,7 +183,7 @@ template <class ContainerAllocator>
 struct Serializer<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 {
   template <typename Stream, typename T>
-  inline static void allInOne(Stream& stream, T m)
+  inline static void allInOne(Stream & stream, T m)
   {
     stream.next(m.header);
     stream.next(m.packets);
@@ -208,18 +203,20 @@ template <class ContainerAllocator>
 struct Printer<::rslidar_msgs::rslidarScan_<ContainerAllocator>>
 {
   template <typename Stream>
-  static void stream(Stream& s, const std::string& indent, const ::rslidar_msgs::rslidarScan_<ContainerAllocator>& v)
+  static void stream(
+    Stream & s, const std::string & indent,
+    const ::rslidar_msgs::rslidarScan_<ContainerAllocator> & v)
   {
     s << indent << "header: ";
     s << std::endl;
     Printer<::std_msgs::Header_<ContainerAllocator>>::stream(s, indent + "  ", v.header);
     s << indent << "packets[]" << std::endl;
-    for (size_t i = 0; i < v.packets.size(); ++i)
-    {
+    for (size_t i = 0; i < v.packets.size(); ++i) {
       s << indent << "  packets[" << i << "]: ";
       s << std::endl;
       s << indent;
-      Printer<::rslidar_msgs::rslidarPacket_<ContainerAllocator>>::stream(s, indent + "    ", v.packets[i]);
+      Printer<::rslidar_msgs::rslidarPacket_<ContainerAllocator>>::stream(
+        s, indent + "    ", v.packets[i]);
     }
   }
 };

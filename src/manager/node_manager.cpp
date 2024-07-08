@@ -31,16 +31,17 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************************************************************/
 
 #include "manager/node_manager.hpp"
+
 #include "source/source_driver.hpp"
-#include "source/source_pointcloud_ros.hpp"
 #include "source/source_packet_ros.hpp"
+#include "source/source_pointcloud_ros.hpp"
 
 namespace robosense
 {
 namespace lidar
 {
 
-void NodeManager::init(const YAML::Node& config)
+void NodeManager::init(const YAML::Node & config)
 {
   YAML::Node common_config = yamlSubNodeAbort(config, "common");
 
@@ -61,18 +62,18 @@ void NodeManager::init(const YAML::Node& config)
 
   YAML::Node lidar_config = yamlSubNodeAbort(config, "lidar");
 
-  for (uint8_t i = 0; i < lidar_config.size(); ++i)
-  {
+  for (uint8_t i = 0; i < lidar_config.size(); ++i) {
     std::shared_ptr<Source> source;
 
-    switch (msg_source)
-    {
+    switch (msg_source) {
       case SourceType::MSG_FROM_LIDAR:  // online lidar
 
         RS_INFO << "------------------------------------------------------" << RS_REND;
         RS_INFO << "Receive Packets From : Online LiDAR" << RS_REND;
-        RS_INFO << "Msop Port: " << lidar_config[i]["driver"]["msop_port"].as<uint16_t>() << RS_REND;
-        RS_INFO << "Difop Port: " << lidar_config[i]["driver"]["difop_port"].as<uint16_t>() << RS_REND;
+        RS_INFO << "Msop Port: " << lidar_config[i]["driver"]["msop_port"].as<uint16_t>()
+                << RS_REND;
+        RS_INFO << "Difop Port: " << lidar_config[i]["driver"]["difop_port"].as<uint16_t>()
+                << RS_REND;
         RS_INFO << "------------------------------------------------------" << RS_REND;
 
         source = std::make_shared<SourceDriver>(SourceType::MSG_FROM_LIDAR);
@@ -83,7 +84,8 @@ void NodeManager::init(const YAML::Node& config)
 
         RS_INFO << "------------------------------------------------------" << RS_REND;
         RS_INFO << "Receive Packets From : ROS" << RS_REND;
-        RS_INFO << "Msop Topic: " << lidar_config[i]["ros"]["ros_recv_packet_topic"].as<std::string>() << RS_REND;
+        RS_INFO << "Msop Topic: "
+                << lidar_config[i]["ros"]["ros_recv_packet_topic"].as<std::string>() << RS_REND;
         RS_INFO << "------------------------------------------------------" << RS_REND;
 
         source = std::make_shared<SourcePacketRos>();
@@ -94,8 +96,10 @@ void NodeManager::init(const YAML::Node& config)
 
         RS_INFO << "------------------------------------------------------" << RS_REND;
         RS_INFO << "Receive Packets From : Pcap" << RS_REND;
-        RS_INFO << "Msop Port: " << lidar_config[i]["driver"]["msop_port"].as<uint16_t>() << RS_REND;
-        RS_INFO << "Difop Port: " << lidar_config[i]["driver"]["difop_port"].as<uint16_t>() << RS_REND;
+        RS_INFO << "Msop Port: " << lidar_config[i]["driver"]["msop_port"].as<uint16_t>()
+                << RS_REND;
+        RS_INFO << "Difop Port: " << lidar_config[i]["driver"]["difop_port"].as<uint16_t>()
+                << RS_REND;
         RS_INFO << "------------------------------------------------------" << RS_REND;
 
         source = std::make_shared<SourceDriver>(SourceType::MSG_FROM_PCAP);
@@ -107,11 +111,11 @@ void NodeManager::init(const YAML::Node& config)
         exit(-1);
     }
 
-    if (send_packet_ros)
-    {
+    if (send_packet_ros) {
       RS_DEBUG << "------------------------------------------------------" << RS_REND;
       RS_DEBUG << "Send Packets To : ROS" << RS_REND;
-      RS_DEBUG << "Msop Topic: " << lidar_config[i]["ros"]["ros_send_packet_topic"].as<std::string>() << RS_REND;
+      RS_DEBUG << "Msop Topic: "
+               << lidar_config[i]["ros"]["ros_send_packet_topic"].as<std::string>() << RS_REND;
       RS_DEBUG << "------------------------------------------------------" << RS_REND;
 
       std::shared_ptr<DestinationPacket> dst = std::make_shared<DestinationPacketRos>();
@@ -119,12 +123,11 @@ void NodeManager::init(const YAML::Node& config)
       source->regPacketCallback(dst);
     }
 
-    if (send_point_cloud_ros)
-    {
+    if (send_point_cloud_ros) {
       RS_DEBUG << "------------------------------------------------------" << RS_REND;
       RS_DEBUG << "Send PointCloud To : ROS" << RS_REND;
-      RS_DEBUG << "PointCloud Topic: " << lidar_config[i]["ros"]["ros_send_point_cloud_topic"].as<std::string>()
-               << RS_REND;
+      RS_DEBUG << "PointCloud Topic: "
+               << lidar_config[i]["ros"]["ros_send_point_cloud_topic"].as<std::string>() << RS_REND;
       RS_DEBUG << "------------------------------------------------------" << RS_REND;
 
       std::shared_ptr<DestinationPointCloud> dst = std::make_shared<DestinationPointCloudRos>();
@@ -138,10 +141,8 @@ void NodeManager::init(const YAML::Node& config)
 
 void NodeManager::start()
 {
-  for (auto& iter : sources_)
-  {
-    if (iter != nullptr)
-    {
+  for (auto & iter : sources_) {
+    if (iter != nullptr) {
       iter->start();
     }
   }
@@ -149,19 +150,14 @@ void NodeManager::start()
 
 void NodeManager::stop()
 {
-  for (auto& iter : sources_)
-  {
-    if (iter != nullptr)
-    {
+  for (auto & iter : sources_) {
+    if (iter != nullptr) {
       iter->stop();
     }
   }
 }
 
-NodeManager::~NodeManager()
-{
-  stop();
-}
+NodeManager::~NodeManager() { stop(); }
 
 }  // namespace lidar
 }  // namespace robosense
