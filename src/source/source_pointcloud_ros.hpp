@@ -204,6 +204,7 @@ inline void DestinationPointCloudRos::sendPointCloud(const LidarPointCloudMsg& m
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #include <sstream>
+#include <rclcpp/qos.hpp>
 
 namespace robosense
 {
@@ -358,7 +359,7 @@ inline void DestinationPointCloudRos::init(const YAML::Node& config)
   node_name << "rslidar_points_destination_" << node_index++;
 
   node_ptr_.reset(new rclcpp::Node(node_name.str()));
-  pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_topic, 100);
+  pub_ = node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_topic, rclcpp::SensorDataQoS());
 }
 
 inline void DestinationPointCloudRos::sendPointCloud(const LidarPointCloudMsg& msg)

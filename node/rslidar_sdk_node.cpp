@@ -40,6 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ros/package.h>
 #elif ROS2_FOUND
 #include <rclcpp/rclcpp.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
 #endif
 
 using namespace robosense::lidar;
@@ -83,7 +84,7 @@ int main(int argc, char** argv)
 #ifdef RUN_IN_ROS_WORKSPACE
    config_path = ros::package::getPath("rslidar_sdk");
 #else
-   config_path = (std::string)PROJECT_PATH;
+   config_path = ament_index_cpp::get_package_share_directory("ppmt_robot_driver");
 #endif
 
    config_path += "/config/config.yaml";
