@@ -5,7 +5,8 @@ project(rslidar_sdk)
 #=======================================
 # Custom Point Type (XYZI,XYZIRT, XYZIF, XYZIRTF)
 #=======================================
-set(POINT_TYPE XYZI)
+set(POINT_TYPE XYZIRT)
+set(ENABLE_IMU_DATA_PARSE ON)   # change this to OFF or comment for robosense Helios
 
 option(ENABLE_TRANSFORM "Enable transform functions" OFF)
 if(${ENABLE_TRANSFORM})
