@@ -6,7 +6,7 @@ project(rslidar_sdk)
 # Custom Point Type (XYZI,XYZIRT, XYZIF, XYZIRTF)
 #=======================================
 set(POINT_TYPE XYZIRT)
-# set(ENABLE_IMU_DATA_PARSE ON)   # uncomment for robosense airy
+set(ENABLE_IMU_DATA_PARSE ON)   # uncomment for robosense airy
 
 option(ENABLE_TRANSFORM "Enable transform functions" OFF)
 if(${ENABLE_TRANSFORM})
