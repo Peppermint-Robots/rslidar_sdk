@@ -248,6 +248,7 @@ inline void DestinationPointCloudRos::sendImuData(const std::shared_ptr<ImuData>
 #endif  // ROS_FOUND
 
 #ifdef ROS2_FOUND
+#include <point_cloud_transport/point_cloud_transport.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 #ifdef ENABLE_IMU_DATA_PARSE
@@ -417,7 +418,7 @@ public:
 
 private:
   std::shared_ptr<rclcpp::Node> node_ptr_;
-  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_;
+  point_cloud_transport::Publisher pub_;
 #ifdef ENABLE_IMU_DATA_PARSE
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
 #endif
@@ -448,8 +449,8 @@ inline void DestinationPointCloudRos::init(const YAML::Node & config)
 
   node_ptr_.reset(new rclcpp::Node(node_name.str()));
 
-  pub_ =
-    node_ptr_->create_publisher<sensor_msgs::msg::PointCloud2>(ros_send_topic, ros_queue_length);
+  const auto pct = std::make_shared<point_cloud_transport::PointCloudTransport>(node_ptr_);
+  pub_ = pct->advertise(ros_send_topic, ros_queue_length);
 
 #ifdef ENABLE_IMU_DATA_PARSE
   std::string ros_send_imu_data_topic;
@@ -461,7 +462,7 @@ inline void DestinationPointCloudRos::init(const YAML::Node & config)
 
 inline void DestinationPointCloudRos::sendPointCloud(const LidarPointCloudMsg & msg)
 {
-  pub_->publish(toRosMsg(msg, frame_id_, send_by_rows_));
+  pub_.publish(toRosMsg(msg, frame_id_, send_by_rows_));
 }
 #ifdef ENABLE_IMU_DATA_PARSE
 inline void DestinationPointCloudRos::sendImuData(const std::shared_ptr<ImuData> & data)

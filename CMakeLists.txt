@@ -143,6 +143,7 @@ if(rclcpp_FOUND)
   find_package(sensor_msgs REQUIRED)
   find_package(rslidar_msg REQUIRED)
   find_package(std_msgs REQUIRED)
+  find_package(point_cloud_transport REQUIRED)
 
 else(rclcpp_FOUND)
   message(=============================================================)
@@ -193,7 +194,8 @@ if(rclcpp_FOUND)
     rclcpp
     std_msgs
     sensor_msgs
-    rslidar_msg)
+    rslidar_msg
+    point_cloud_transport)
 
   install(TARGETS
     rslidar_sdk_node
