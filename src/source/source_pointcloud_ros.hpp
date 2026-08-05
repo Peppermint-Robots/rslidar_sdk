@@ -254,6 +254,7 @@ inline void DestinationPointCloudRos::sendImuData(const std::shared_ptr<ImuData>
 #ifdef ENABLE_IMU_DATA_PARSE
 #include <sensor_msgs/msg/imu.hpp>
 #endif
+#include <algorithm>
 #include <sstream>
 
 namespace robosense
@@ -449,8 +450,18 @@ inline void DestinationPointCloudRos::init(const YAML::Node & config)
 
   node_ptr_.reset(new rclcpp::Node(node_name.str()));
 
+  std::string ros_send_topic_dots = ros_send_topic;
+  std::replace(ros_send_topic_dots.begin(), ros_send_topic_dots.end(), '/', '.');
+  node_ptr_->declare_parameter<std::vector<std::string>>(
+    ros_send_topic_dots + ".enable_pub_plugins",
+    {"point_cloud_transport/raw", "point_cloud_transport/cloudini"});
+
+  const auto custom_qos = rclcpp::QoS(rclcpp::KeepLast(ros_queue_length))
+                      .reliable()
+                      .durability_volatile()
+                      .get_rmw_qos_profile();
   const auto pct = std::make_shared<point_cloud_transport::PointCloudTransport>(node_ptr_);
-  pub_ = pct->advertise(ros_send_topic, ros_queue_length);
+  pub_ = pct->advertise(ros_send_topic, custom_qos);
 
 #ifdef ENABLE_IMU_DATA_PARSE
   std::string ros_send_imu_data_topic;
